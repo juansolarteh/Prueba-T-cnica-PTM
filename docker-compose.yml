@@ -22,7 +22,7 @@ services:
       - ptm-test-net
 
   servicio-rest:
-    build: .
+    build: ./servicioREST
     container_name: servicio-rest-ptm
     depends_on:
       mysql:
@@ -35,6 +35,11 @@ services:
       - "8080:8080"
     networks:
       - ptm-test-net
+
+  app-front:
+    build: ./app-front
+    ports:
+      - "3000:80"
 
 networks:
   ptm-test-net:
