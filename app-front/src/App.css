@@ -1,0 +1,39 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-container > *:not(.app-footer) {
+  flex-shrink: 0;
+}
+
+.app-footer {
+  margin-top: auto;
+  padding: 1rem;
+  background-color: #f0f0f0;
+  text-align: center;
+  border-top: 1px solid #d9d9d9;
+}
+
+.custom-alert {
+  margin: 1rem;
+}
+
+.actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.right-actions {
+  display: flex;
+  align-items: center;
+}
+
+.custom-table {
+  margin: 1rem;
+}
