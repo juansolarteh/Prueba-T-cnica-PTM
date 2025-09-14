@@ -113,6 +113,15 @@ public class ProductoController {
     }
 
     @GetMapping("/combinaciones")
+    @Operation(summary = "Obtener combinaciones de productos por valor máximo", description = "Recupera combinaciones de productos cuya suma de precios no exceda un valor dado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de combinaciones de productos recuperada exitosamente",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductoConminationDTO.class)))),
+            @ApiResponse(responseCode = "400", description = "Solicitud inválida, parámetro de consulta incorrecto o faltante",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PropertyErrorDTO.class)))),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor",
+                    content = @Content(schema = @Schema(implementation = UniqueErrorDTO.class)))
+    })
     public ResponseEntity<List<ProductoConminationDTO>> get(@RequestParam @DecimalMin("0.01") double valorComparacion) {
         List<ProductoConminationDTO> result = getProductosCombinationsPort.execute(valorComparacion);
         return ResponseEntity.ok(result);
