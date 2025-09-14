@@ -134,7 +134,7 @@ La API REST ahora estará disponible en:
 
 8. Instalar dependencias:
 ```bash
-   npm start
+   npm install
 ```
 
 9. Ejecutar el proyecto React:
