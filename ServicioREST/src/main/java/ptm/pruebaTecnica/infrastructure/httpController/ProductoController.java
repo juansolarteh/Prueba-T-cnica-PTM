@@ -12,6 +12,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ptm.pruebaTecnica.application.DTOs.ProductoConminationDTO;
 import ptm.pruebaTecnica.application.ports.in.*;
@@ -28,6 +29,7 @@ import java.util.List;
 @AllArgsConstructor
 @Tag(name = "Productos", description = "Endpoints para la gestión de productos")
 @CrossOrigin(origins = "*")
+@Validated
 public class ProductoController {
     private final CreateProductoPort createProductoPort;
     private final GetAllProductosPort getAllProductosPort;

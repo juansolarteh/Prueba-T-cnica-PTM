@@ -1,5 +1,6 @@
 package ptm.pruebaTecnica.infrastructure.exceptionHandler;
 
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ptm.pruebaTecnica.application.exceptions.ProductoNoExistenteException;
 
 import java.util.ArrayList;
@@ -25,6 +27,25 @@ public class GlobalExceptionHandler {
         );
         
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<UniqueErrorDTO> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        String message = ex.getRequiredType() != null ?
+                String.format("El parámetro '%s' debe ser de tipo '%s'", ex.getName(), ex.getRequiredType().getSimpleName()) :
+                String.format("El parámetro '%s' es inválido", ex.getName());
+        UniqueErrorDTO response = new UniqueErrorDTO(message);
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<UniqueErrorDTO> handleConstraintViolationException(ConstraintViolationException ex) {
+        String message = ex.getConstraintViolations().stream()
+                .map(violation -> String.format("El parámetro '%s' %s", violation.getPropertyPath(), violation.getMessage()))
+                .reduce((msg1, msg2) -> msg1 + "; " + msg2)
+                .orElse("Error de validación en los parámetros");
+        UniqueErrorDTO response = new UniqueErrorDTO(message);
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(ProductoNoExistenteException.class)
