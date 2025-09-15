@@ -293,3 +293,5 @@ La aplicación web estará disponible en:
 
 # Postman
 En la raíz del proyecto se incluye una colección de **Postman** que puede importarse para probar fácilmente los servicios expuestos por la API.
+
+**Nota:** Para verificar funcionamiento de la API se puede ejecutar pruebas unitarias y de integración del proyecto Spring Boot.
