@@ -2,7 +2,7 @@ package ptm.pruebaTecnica.application.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ptm.pruebaTecnica.application.DTOs.ProductoConminationDTO;
+import ptm.pruebaTecnica.application.DTOs.ProductoCombinationDTO;
 import ptm.pruebaTecnica.application.ports.in.GetProductosCombinationsPort;
 import ptm.pruebaTecnica.application.ports.out.ProductoRepositoryPort;
 import ptm.pruebaTecnica.domain.Producto;
@@ -17,10 +17,10 @@ public class GetProductosCombinationsService implements GetProductosCombinations
     private final ProductoRepositoryPort productoRepositoryPort;
     private final int LIMIT_ELEMENTS_DEFAULT = 5;
     @Override
-    public List<ProductoConminationDTO> execute(double valorComparacion) {
+    public List<ProductoCombinationDTO> execute(double valorComparacion) {
         List<Producto> productos = productoRepositoryPort.findAllByPrecioLessThanOrderByPrecioDesc(valorComparacion);
         if (productos.isEmpty() || productos.size() < 2) return new ArrayList<>();
-        List<ProductoConminationDTO> resultado = new ArrayList<>();
+        List<ProductoCombinationDTO> resultado = new ArrayList<>();
 
         //Combinaciones de 2 productos
         for (int i = 0; i < productos.size() - 1; i++) {
@@ -29,12 +29,15 @@ public class GetProductosCombinationsService implements GetProductosCombinations
                 Producto producto2 = productos.get(j);
                 double suma = producto1.getPrecio() + producto2.getPrecio();
                 if (suma <= valorComparacion) {
-                    resultado.add(new ProductoConminationDTO(List.of(producto1, producto2), suma));
+                    resultado.add(new ProductoCombinationDTO(List.of(producto1, producto2), suma));
                 }
             }
         }
 
-        if (productos.size() < 3) return resultado;
+        if (productos.size() < 3) return resultado.stream()
+                .sorted((a, b) -> Double.compare(b.getValorSumatoria(), a.getValorSumatoria()))
+                .limit(LIMIT_ELEMENTS_DEFAULT)
+                .collect(Collectors.toList());
 
         //Combinaciones de 3 productos
         for (int i = 0; i < productos.size() - 2; i++) {
@@ -47,7 +50,7 @@ public class GetProductosCombinationsService implements GetProductosCombinations
                     Producto producto3 = productos.get(k);
                     double suma = producto1.getPrecio() + producto2.getPrecio() + producto3.getPrecio();
                     if (suma <= valorComparacion) {
-                        resultado.add(new ProductoConminationDTO(List.of(producto1, producto2, producto3), suma));
+                        resultado.add(new ProductoCombinationDTO(List.of(producto1, producto2, producto3), suma));
                     }
                 }
             }

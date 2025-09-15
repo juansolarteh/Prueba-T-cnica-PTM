@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ptm.pruebaTecnica.application.DTOs.ProductoConminationDTO;
+import ptm.pruebaTecnica.application.DTOs.ProductoCombinationDTO;
 import ptm.pruebaTecnica.application.ports.in.*;
 import ptm.pruebaTecnica.domain.Producto;
 import ptm.pruebaTecnica.infrastructure.exceptionHandler.PropertyErrorDTO;
@@ -102,6 +102,8 @@ public class ProductoController {
     @Operation(summary = "Eliminar un producto por ID", description = "Elimina un producto existente utilizando su ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Producto eliminado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Solicitud inválida, ID incorrecto",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PropertyErrorDTO.class)))),
             @ApiResponse(responseCode = "404", description = "Producto no encontrado",
                     content = @Content(schema = @Schema(implementation = UniqueErrorDTO.class))),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor",
@@ -116,14 +118,14 @@ public class ProductoController {
     @Operation(summary = "Obtener combinaciones de productos por valor máximo", description = "Recupera combinaciones de productos cuya suma de precios no exceda un valor dado.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de combinaciones de productos recuperada exitosamente",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductoConminationDTO.class)))),
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductoCombinationDTO.class)))),
             @ApiResponse(responseCode = "400", description = "Solicitud inválida, parámetro de consulta incorrecto o faltante",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = PropertyErrorDTO.class)))),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor",
                     content = @Content(schema = @Schema(implementation = UniqueErrorDTO.class)))
     })
-    public ResponseEntity<List<ProductoConminationDTO>> get(@RequestParam @DecimalMin("0.01") double valorComparacion) {
-        List<ProductoConminationDTO> result = getProductosCombinationsPort.execute(valorComparacion);
+    public ResponseEntity<List<ProductoCombinationDTO>> get(@RequestParam @DecimalMin("0.01") double valorComparacion) {
+        List<ProductoCombinationDTO> result = getProductosCombinationsPort.execute(valorComparacion);
         return ResponseEntity.ok(result);
     }
 }
